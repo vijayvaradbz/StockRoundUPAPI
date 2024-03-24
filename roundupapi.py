@@ -26,7 +26,7 @@ addUserData = {
 
 @app.route('/')
 def index():
-    return 'Hello StockRoundup'
+    return 'Hello StockRoundup12'
 
 @app.route('/stocks')
 def getStocks():
@@ -100,9 +100,13 @@ def getBSEStockList():
 
 @app.route('/nsestocklist')
 def getNSEStockList():
+    print(nse.get_index_list());
     print(nse.get_stock_codes())
     with open(r"NSEStockList.json", 'r+') as u:
         u.seek(0)    
-        json.dump(nse.get_stock_codes, u, indent=4)    
+        json.dump(nse.get_stock_codes(), u, indent=4)    
         u.truncate() 
     print(nse.get_stock_codes())
+
+
+

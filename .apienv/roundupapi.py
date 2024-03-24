@@ -19,7 +19,7 @@ addUserData = {
 
 @app.route('/')
 def index():
-    return 'Hello StockRoundup'
+    return 'Hello StockRoundup1'
 
 @app.route('/stocks')
 def getStocks():
