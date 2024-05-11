@@ -1,3 +1,4 @@
+import hashlib
 import os
 from flask import Flask, request
 app = Flask(__name__)
@@ -84,15 +85,29 @@ def userSignUp():
 def addUser(userData):
     with open(r"COMDATA/Users.txt", 'r+') as u:
         userDataObj = json.load(u, strict=False)
+        encPass = hashlib.sha384(userDataObj["pwd"] + userDataObj["uid"]).hexdigest()
+        userDataObj["pwd"] = encPass
         userDataObj.append(userData)
         u.seek(0)    
         json.dump(userDataObj, u, indent=4)    
-        u.truncate() 
     return userDataObj
 
-@app.route('/getUserData')
-def getUserData():
-    return getUsers()
+
+@app.route('/validateUserLogin')
+def validateUserLogin():
+    data = request.get_data();
+    userLoginData = json.loads(data); 
+    return validateUserLoginDetails(userLoginData)
+
+def validateUserLoginDetails(userLoginData):
+    with open(r"COMDATA/Users.txt", 'r+') as f:
+        loginStatus: bool = False;
+        userListObj = json.load(f, strict=False)
+        for user in userListObj:
+            if (user["uid"] == userLoginData["uid"]) and (user["pwd"] == hashlib.sha384(userLoginData["pwd"] + userLoginData["uid"]).hexdigest()):
+                loginStatus = True;
+                break;
+    return loginStatus
 
 def getUsers():
     with open(r"COMDATA/Users.txt", 'r+') as f:
@@ -152,7 +167,7 @@ def removeChannelmember(channelId, channelData):
     return channelDataObj
 
 #Get Stock feed
-@app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
+@app.route('/stockfeed/<string:stquoteId>', methods = ['POST'])
 def getStockFeedbyId(stquoteId):
     with open(r"STKFD/"+stquoteId+".txt", 'r+') as f:
         stockFeedObj = json.load(f, strict=False)
