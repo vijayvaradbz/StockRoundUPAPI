@@ -1,7 +1,9 @@
 import hashlib
 import os
 from flask import Flask, request
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 import json
 from datetime import datetime
 from bsedata.bse import BSE
@@ -177,6 +179,8 @@ def getStockFeedbyId(stquoteId):
 def getIndicesFeedbyId(IndicesId):
     with open(r"INDSFD/"+IndicesId+".txt", 'r+') as f:
         stockFeedObj = json.load(f, strict=False)
+
+    print(stockFeedObj);
     return stockFeedObj
 
 @app.route('/channelfeed/<string:chennalId>', methods = ['GET'])

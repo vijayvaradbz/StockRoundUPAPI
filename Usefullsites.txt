@@ -1,4 +1,9 @@
 
 https://code.visualstudio.com/docs/python/tutorial-flask
 
+
+https://code.visualstudio.com/docs/python/tutorial-flask
+
+https://likegeeks.com/remove-elements-json-arrays-python/#:~:text=The%20pop()%20method%20is,JSON%20array%20using%20its%20index.&text=The%20pop()%20method%20not,with%20the%20removed%20element%20afterwards.
+
 https://likegeeks.com/remove-elements-json-arrays-python/#:~:text=The%20pop()%20method%20is,JSON%20array%20using%20its%20index.&text=The%20pop()%20method%20not,with%20the%20removed%20element%20afterwards.
