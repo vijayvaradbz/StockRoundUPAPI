@@ -1,0 +1,20 @@
+[
+    {
+        "uid": "vj1",
+        "name": "eeeee",
+        "desc": "eeee",
+        "access": "Private",
+        "lang": "English",
+        "dt": "17/07/2024 00:06:56",
+        "cmt": "Channel Created"
+    },
+    {
+        "uid": "vj1",
+        "name": "eeeee",
+        "desc": "eeee",
+        "access": "Private",
+        "lang": "English",
+        "dt": "17/07/2024 00:06:06",
+        "cmt": "Channel Created"
+    }
+]

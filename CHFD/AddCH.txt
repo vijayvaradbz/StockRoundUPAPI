@@ -1,0 +1,18 @@
+[
+    {
+        "uid": "vj1",
+        "cmt": "Test Channel",
+        "lang": "English",
+        "dt": "09/07/2024 22:50:59"
+    },
+    {
+        "uid": "vj1",
+        "name": "AddCH",
+        "desc": "Add Channnel for Test",
+        "access": "Public",
+        "lang": "English",
+        "dt": "09/07/2024 22:50:12",
+        "signupdt": "09/07/2024 22:50:12",
+        "cmt": "Channel Created"
+    }
+]

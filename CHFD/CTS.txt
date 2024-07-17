@@ -1,21 +1,15 @@
 [
     {
         "uid": "vj1",
-        "cmt": "What will be CTS today",
+        "cmt": "Channel CTS is Live today",
         "lang": "English",
-        "dt": "05/07/2024 02:12:29"
+        "dt": "05/07/2024 02:21:17"
     },
     {
         "uid": "vj1",
-        "cmt": "What will be CTS Tomorrow",
+        "cmt": "Channel CTS is Live",
         "lang": "English",
-        "dt": "05/07/2024 02:12:19"
-    },
-    {
-        "uid": "vj1",
-        "cmt": "What will be CTS Tomorrow",
-        "lang": "English",
-        "dt": "05/07/2024 02:12:14"
+        "dt": "05/07/2024 02:21:05"
     },
     {
         "uid": "vj1",

@@ -1,0 +1,119 @@
+[
+    {},
+    {
+        "uid": "vj1",
+        "name": "TestChannel",
+        "desc": "TestChannel",
+        "access": "Public",
+        "lang": "English",
+        "dt": "",
+        "signupdt": "09/07/2024 21:43:38"
+    },
+    {
+        "uid": "vj1",
+        "name": "VjChannel",
+        "desc": "Vijay Channel",
+        "access": "Private",
+        "lang": "English",
+        "dt": "",
+        "signupdt": "09/07/2024 22:08:52"
+    },
+    {
+        "uid": "vj1",
+        "name": "SRCHannel",
+        "desc": "SR CHannel New",
+        "access": "Public",
+        "lang": "English",
+        "dt": "",
+        "signupdt": "09/07/2024 22:15:45"
+    },
+    {
+        "uid": "vj1",
+        "name": "AddCH",
+        "desc": "Add Channnel for Test",
+        "access": "Public",
+        "lang": "English",
+        "dt": "",
+        "signupdt": "09/07/2024 22:50:12"
+    },
+    {
+        "uid": "vj1",
+        "name": "TCSCh",
+        "desc": "TCS Channel",
+        "access": "Public",
+        "lang": "English",
+        "dt": "09/07/2024 22:52:10"
+    },
+    {
+        "uid": "vj1",
+        "name": "TestToAuth",
+        "desc": "Test",
+        "access": "Public",
+        "lang": "English",
+        "dt": "16/07/2024 23:06:49"
+    },
+    {
+        "uid": "vj1",
+        "name": "eeeee",
+        "desc": "eeee",
+        "access": "Private",
+        "lang": "English",
+        "dt": "17/07/2024 00:06:06"
+    },
+    {
+        "uid": "vj1",
+        "name": "eeeee",
+        "desc": "eeee",
+        "access": "Private",
+        "lang": "English",
+        "dt": "17/07/2024 00:06:56"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:29"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:29"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:29"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:37"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:37"
+    },
+    {
+        "uid": "vj1",
+        "name": "ffff",
+        "desc": "wwww",
+        "access": "Public",
+        "lang": "English",
+        "dt": "17/07/2024 23:04:37"
+    }
+]
