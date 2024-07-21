@@ -139,9 +139,10 @@ def validateUserLogin():
     return validateUserLoginDetails(userLoginData)
 
 def validateUserLoginDetails(userLoginData):
-    # userLoginStatus = json.loads(ResploginStatus)
+    ResploginStatus["loginstatus"] = "Failed";
+    ResploginStatus["token"] = "";
+    ResploginStatus["name"] = userLoginData["uid"];
     with open(r"COMDATA/Users.txt", 'r+') as f:
-        loginStatus = "Failed";
         userListObj = json.load(f, strict=False)
         userPwd = hashlib.sha384(str(userLoginData["uid"] + userLoginData["pwd"]).encode()).hexdigest()
         for user in userListObj:
