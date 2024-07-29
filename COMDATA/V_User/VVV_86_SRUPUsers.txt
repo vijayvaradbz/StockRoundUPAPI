@@ -1,0 +1,37 @@
+[
+    {
+        "uid": "TestRoundup",
+        "pwd": "e9b99a89bff06ac945f4da98b31882378d55cf92ae78f0ff54e5d8ed5da11547e9c0f1180a3da8c8145755026993b626",
+        "email": "testRoundup@rounddup.com",
+        "mobile": "11111111111",
+        "lang": "English",
+        "signupdt": "24/07/2024 21:59:12"
+    },
+    {
+        "uid": "VVIJAYTESTUSER1",
+        "fname": "Vijay Test",
+        "pwd": "015950daf56ca750e55d10557408234c5e4cea042dc83578e9f238838c0f17e88611719a16868f8ce439644953f93370",
+        "email": "VvijaytestUser1@SRUP.com",
+        "mobile": "9090909011",
+        "lang": "English",
+        "signupdt": "28/07/2024 20:39:52",
+        "signupSysFind": "106.222.221.221",
+        "tcAgree": "No",
+        "tcAgreeDate": "",
+        "watchList": [],
+        "channels": []
+    },
+    {
+        "uid": "Vvijaynet",
+        "pwd": "29f486d35a352ecca0f60243f327945fdb791fbd1528f112fcc2f1916fb8b659283216024079a88d95fb03947f02f287",
+        "email": "vijaytest@sr.com",
+        "mobile": "+919090909011",
+        "lang": "English",
+        "signupdt": "07/07/2024 19:26:32",
+        "signupSysFind": "106.222.221.221",
+        "tcAgree": "No",
+        "tcAgreeDate": "",
+        "watchList": "[{\"options\":\"Stocks\",\"symbol\":\"INFY\"}]",
+        "channels": []
+    }
+]

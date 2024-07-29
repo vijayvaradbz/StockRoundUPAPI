@@ -29,6 +29,10 @@ ResploginStatus = {
        "token": ""    
     }
 
+RespsignupStatus={
+    "status":"Failed"
+}
+
 # addUserData = {
 #         "uid": "vj1",
 #         "pwd": "erthfngngjgjfj$#@jjjdfjsdfdsjf",
@@ -74,6 +78,7 @@ def token_required(f):
 
 # Insert Stock, Indices and Channel Feed data
 @app.route('/stockfeeddetails/<string:stquoteId>', methods=['POST'])
+@token_required
 def stockfeeddetails(stquoteId):
     data = request.get_data()
     json_object = json.loads(data)
@@ -81,6 +86,7 @@ def stockfeeddetails(stquoteId):
     return stockfeeddetail("STKFD", stquoteId, json_object)
 
 @app.route('/indicesfeeddetails/<string:stquoteId>', methods=['POST'])
+@token_required
 def indicesfeeddetails(stquoteId):
     data = request.get_data()
     json_object = json.loads(data)
@@ -88,6 +94,7 @@ def indicesfeeddetails(stquoteId):
     return stockfeeddetail("INDSFD", stquoteId, json_object)
 
 @app.route('/channelfeeddetails/<string:chquoteId>', methods=['POST'])
+@token_required
 def channelfeeddetails(chquoteId):
     data = request.get_data()
     json_object = json.loads(data)
@@ -122,14 +129,25 @@ def userSignUp():
     return addUser(json_object)
 
 def addUser(userData):
-    with open(r"COMDATA/Users.txt", 'r+') as u:
-        userDataObj = json.load(u, strict=False)
-        userData["pwd"] = hashlib.sha384(str(userData["uid"] + userData["pwd"]).encode()).hexdigest()
-        userData["signupdt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        userDataObj.append(userData)
-        u.seek(0)    
-        json.dump(userDataObj, u, indent=4)    
-    return "success"
+    if userData["uid"] != "":
+        SRUsername = userData["uid"];
+        SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt"
+        print(SRUserFilename);
+        with open(r"COMDATA/"+SRUsername[0].upper()+"_User/"+SRUserFilename, 'r+') as u:
+            userDataObj = json.load(u, strict=False)
+            user = next(filter(lambda row: row["uid"].upper() == userData["uid"].upper() and row["email"].upper() == userData["email"].upper(), userDataObj), None);
+            if(user != None):
+                RespsignupStatus["status"] = "DuplicateUserID"
+            else:
+                userData["pwd"] = hashlib.sha384(str(userData["uid"] + userData["pwd"]).encode()).hexdigest()
+                userData["signupdt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                userData["lang"] = "English";
+                userDataObj.append(userData)
+                u.seek(0)    
+                json.dump(userDataObj, u, indent=4)    
+                RespsignupStatus["status"] =  "Success"
+
+        return RespsignupStatus
 
 
 @app.route('/validateUserLogin', methods=['POST'])
@@ -142,17 +160,23 @@ def validateUserLoginDetails(userLoginData):
     ResploginStatus["loginstatus"] = "Failed";
     ResploginStatus["token"] = "";
     ResploginStatus["name"] = userLoginData["uid"];
-    with open(r"COMDATA/Users.txt", 'r+') as f:
-        userListObj = json.load(f, strict=False)
-        userPwd = hashlib.sha384(str(userLoginData["uid"] + userLoginData["pwd"]).encode()).hexdigest()
-        for user in userListObj:
-            if (user["uid"] == userLoginData["uid"]) and (user["pwd"] == userPwd):
+    ResploginStatus["watchList"] = '[]';
+    ResploginStatus["channelList"] = '[]';
+    if userLoginData["uid"] != "":
+        SRUsername = userLoginData["uid"];
+        SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt"
+        with open(r"COMDATA/"+SRUsername[0].upper()+"_User/"+SRUserFilename, 'r+') as f:
+            userListObj = json.load(f, strict=False)
+            userPwd = hashlib.sha384(str(userLoginData["uid"] + userLoginData["pwd"]).encode()).hexdigest()
+            user = next(filter(lambda row: row["uid"].upper() == userLoginData["uid"].upper() and row["pwd"] == userPwd, userListObj), None);
+            if(user != None):
                 ResploginStatus["loginstatus"] = "Success";
                 ResploginStatus["token"] = generate_auth_token(user["uid"]);
                 ResploginStatus["name"] = user["uid"];
-                break;
-    
-    print(ResploginStatus);
+                ResploginStatus["watchList"] = user["watchList"];
+                ResploginStatus["channelList"] = user["channels"];
+
+                
     return ResploginStatus;
 
 def generate_auth_token(userID):
@@ -174,7 +198,6 @@ def getUsers():
 
 #Add Channel Details
 @app.route('/addChannel', methods=['POST'])
-@token_required
 def addChannel():
     data = request.get_data();
     json_object = json.loads(data); 
@@ -182,20 +205,21 @@ def addChannel():
     return createChannel(json_object, json_object["name"])
 
 def createChannel(channelData, chName):
-    
-    with open(r"COMDATA/Channels.txt", 'r+') as ch:
-        channelDataObj = json.load(ch, strict=False)
+    with open(r"COMDATA/Channels.txt", 'r+') as h:
+        channelDataObj = json.load(h, strict=False)
         channelDataObj.append(channelData)
-        ch.seek(0)    
-        json.dump(channelDataObj, ch, indent=4)    
-        ch.truncate() 
+        h.seek(0)    
+        json.dump(channelDataObj, h, indent=4)    
+        h.truncate() 
 
-    channelData["cmt"] = "Channel Created"
-    channelData["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S");
-    stockfeeddetail("CHFD", chName, channelData);
-    return channelDataObj
+    print("test");
+    # channelData["cmt"] = "Channel Created"
+    # channelData["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S");
+    # stockfeeddetail("CHFD", chName, channelData);
+    return "Channel Created"
 
 @app.route('/addChannelmembers/<string:channelId>', methods=['POST'])
+@token_required
 def addChannelMembers(channelId):
     data = request.get_data();
     json_object = json.loads(data); 
@@ -211,7 +235,37 @@ def addChannelMember(channelId, channelData):
         cm.truncate() 
     return channelDataObj
 
+
+@app.route('/addUserWatchList', methods=['POST'])
+# @token_required
+def addUserWatchList():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    return addWatchList(json_object)
+
+def addWatchList(wathListData):
+    print("1");
+    if wathListData["uid"] != "":
+        print("2");
+        SRUsernameWL = wathListData["uid"];
+        SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+        with open(r"COMDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+            wathListDataObj = json.load(cm, strict=False)
+            for row in wathListDataObj:
+                if row["uid"] == wathListData["uid"]:
+                    print(row);
+                    row["watchList"]= wathListData["watchlist"]
+                    break;
+
+            print(wathListDataObj);
+            cm.seek(0)    
+            json.dump(wathListDataObj, cm, indent=4)    
+            cm.truncate() 
+        return wathListDataObj
+    return "{}"
+
 @app.route('/removeChannelmembers/<string:channelId>', methods=['POST'])
+@token_required
 def removeChannelmembers(channelId):
     data = request.get_data();
     json_object = json.loads(data); 
@@ -232,20 +286,34 @@ def removeChannelmember(channelId, channelData):
 #Get Stock feed
 @app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
 def getStockFeedbyId(stquoteId):
-    with open(r"STKFD/"+stquoteId+".txt", 'r+') as f:
-        stockFeedObj = json.load(f, strict=False)
+    stockFeedObj = [];
+    if os.path.exists("STKFD/"+stquoteId+".txt"):
+        with open(r"STKFD/"+stquoteId+".txt", 'r+') as f:
+            stockFeedObj = json.load(f, strict=False)
     return stockFeedObj
 
 @app.route('/indicesfeed/<string:IndicesId>', methods = ['GET'])
 def getIndicesFeedbyId(IndicesId):
-    with open(r"INDSFD/"+IndicesId+".txt", 'r+') as f:
-        stockFeedObj = json.load(f, strict=False)
+    stockFeedObj = [];
+    if os.path.exists("INDSFD/"+IndicesId+".txt"):
+        with open(r"INDSFD/"+IndicesId+".txt", 'r+') as f:
+            stockFeedObj = json.load(f, strict=False)
     return stockFeedObj
 
 @app.route('/channelfeed/<string:chennalId>', methods = ['GET'])
 def getChannelFeedbyId(chennalId):
-    with open(r"CHFD/"+chennalId+".txt", 'r+') as f:
-        stockFeedObj = json.load(f, strict=False)
+    stockFeedObj = [];
+    if os.path.exists("CHFD/"+chennalId+".txt"):
+        with open(r"CHFD/"+chennalId+".txt", 'r+') as f:
+            stockFeedObj = json.load(f, strict=False)
+    return stockFeedObj
+
+@app.route('/otherfeed/<string:otherId>', methods = ['GET'])
+def getOtherFeedbyId(otherId):
+    stockFeedObj = [];
+    if os.path.exists("OTFD/"+otherId+".txt"):
+        with open(r"OTFD/"+otherId+".txt", 'r+') as f:
+            stockFeedObj = json.load(f, strict=False)
     return stockFeedObj
 
 @app.route('/checksite', methods = ['GET'])
