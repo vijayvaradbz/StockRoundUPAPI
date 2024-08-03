@@ -227,13 +227,46 @@ def addChannelMembers(channelId):
     return addChannelMember(channelId,json_object)
 
 def addChannelMember(channelId, channelData):
-    with open(r"COMDATA/"+channelId+".txt", 'r+') as cm:
-        channelDataObj = json.load(cm, strict=False)
-        channelDataObj.append(channelData)
-        cm.seek(0)    
-        json.dump(channelDataObj, cm, indent=4)    
-        cm.truncate() 
-    return channelDataObj
+    if channelData["uid"] != "":
+        SRUsernameWL = channelData["uid"];
+        SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+        with open(r"COMDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+            channelDataObj = json.load(cm, strict=False)
+            for row in channelDataObj:
+                if row["uid"] == channelData["uid"]:
+                    row["channels"]= channelData["channelList"]
+                    break;
+            
+            cm.seek(0)    
+            json.dump(channelDataObj, cm, indent=4)    
+            cm.truncate() 
+        return channelDataObj
+    return "{}"
+
+@app.route('/addUserChannels', methods=['POST'])
+# @token_required
+def addUserChannels():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    json_object["signupdt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S");
+    return addUserChannel(json_object)
+
+def addUserChannel(channelData):
+    if channelData["uid"] != "":
+        SRUsernameWL = channelData["uid"];
+        SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+        with open(r"COMDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+            channelDataObj = json.load(cm, strict=False)
+            for row in channelDataObj:
+                if row["uid"] == channelData["uid"]:
+                    row["channels"]= channelData["channelList"]
+                    break;
+            
+            cm.seek(0)    
+            json.dump(channelDataObj, cm, indent=4)    
+            cm.truncate() 
+        return channelDataObj
+    return "{}"
 
 
 @app.route('/addUserWatchList', methods=['POST'])
@@ -244,9 +277,7 @@ def addUserWatchList():
     return addWatchList(json_object)
 
 def addWatchList(wathListData):
-    print("1");
     if wathListData["uid"] != "":
-        print("2");
         SRUsernameWL = wathListData["uid"];
         SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
         with open(r"COMDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUserFilename, 'r+') as cm:
@@ -256,8 +287,7 @@ def addWatchList(wathListData):
                     print(row);
                     row["watchList"]= wathListData["watchlist"]
                     break;
-
-            print(wathListDataObj);
+            
             cm.seek(0)    
             json.dump(wathListDataObj, cm, indent=4)    
             cm.truncate() 
@@ -315,6 +345,14 @@ def getOtherFeedbyId(otherId):
         with open(r"OTFD/"+otherId+".txt", 'r+') as f:
             stockFeedObj = json.load(f, strict=False)
     return stockFeedObj
+
+@app.route('/globalIndices', methods = ['GET'])
+def globalIndices():
+    globalIndicesListObj = [];
+    if os.path.exists("COMDATA/GlobalIndices.txt"):
+        with open(r"COMDATA/GlobalIndices.txt", 'r+') as f:
+            globalIndicesListObj = json.load(f, strict=False)
+    return globalIndicesListObj
 
 @app.route('/checksite', methods = ['GET'])
 def checkSitefortesting():

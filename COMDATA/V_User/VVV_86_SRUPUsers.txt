@@ -31,7 +31,66 @@
         "signupSysFind": "106.222.221.221",
         "tcAgree": "No",
         "tcAgreeDate": "",
-        "watchList": "[{\"options\":\"Stocks\",\"symbol\":\"INFY\"}]",
-        "channels": []
+        "watchList": [
+            {
+                "options": "Stocks",
+                "symbol": "NIFTY"
+            },
+            {
+                "options": "Indices",
+                "symbol": "BANKNIFTY"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "TCS"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "CTS"
+            },
+            {
+                "options": "Channel",
+                "symbol": "TCS"
+            },
+            {
+                "options": "Channel",
+                "symbol": "Vvvvv"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "APPL"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "MSFT"
+            }
+        ],
+        "channels": [
+            {
+                "name": "NewChannel",
+                "access": "Public",
+                "prmission": "Owner"
+            },
+            {
+                "name": "TestChannelNew",
+                "access": "Public",
+                "prmission": "Owner"
+            },
+            {
+                "name": "VijayChannel",
+                "access": "Private",
+                "prmission": "Owner"
+            },
+            {
+                "name": "VjChannel",
+                "access": "Private",
+                "prmission": "Owner"
+            },
+            {
+                "name": "VjTestChannel",
+                "access": "Public",
+                "prmission": "Owner"
+            }
+        ]
     }
 ]

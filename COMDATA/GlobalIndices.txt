@@ -1,0 +1,132 @@
+[
+    {
+        "index": "Dow Jones",
+        "symbol": "DJI",
+        "LTP": "39,737.26",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"USA"
+    },
+    {
+        "index": "Nasdaq",
+        "symbol": "DJI",
+        "LTP": "16,776.16",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"USA"
+    },
+    {
+        "index": "S&P 500",
+        "symbol": "DJI",
+        "LTP": "5,346.56",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"USA"
+    },
+    {
+        "index": "FTSE",
+        "symbol": "DJI",
+        "LTP": "8,174.71",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"Europe"
+    },
+    {
+        "index": "CAC",
+        "symbol": "DJI",
+        "LTP": "7,251.80",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"Europe"
+    },
+    {
+        "index": "DAX",
+        "symbol": "DJI",
+        "LTP": "17,661.22",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"Europe"
+    },
+    {
+        "index": "Sensex",
+        "symbol": "DJI",
+        "LTP": "80,981.95",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"India"
+    },
+    {
+        "index": "NIFTY",
+        "symbol": "DJI",
+        "LTP": "24,717.70",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"India"
+    },
+    {
+        "index": "Bank NIFTY",
+        "symbol": "DJI",
+        "LTP": "51,350.15",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"India"
+    },
+    {
+        "index": "Nikkei 225",
+        "symbol": "DJI",
+        "LTP": "35,909.70",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38",
+        "Country":"Japan"
+    },
+    {
+        "index": "Straits Times",
+        "symbol": "DJI",
+        "LTP": "3,381.45",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38"
+    },
+    {
+        "index": "Hang Seng",
+        "symbol": "DJI",
+        "LTP": "16,945.51",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38"
+    },
+    {
+        "index": "Shanghai Composite",
+        "symbol": "DJI",
+        "LTP": "2,905.34",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38"
+    },
+    {
+        "index": "Taiwan Weighted",
+        "symbol": "DJI",
+        "LTP": "21,638.09",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38"
+    },
+    {
+        "index": "Jakarta Composite",
+        "symbol": "DJI",
+        "LTP": "7,308.12",
+        "change": "TestChannel",
+        "changeper": "Public",
+        "lastUpdate": "09/07/2024 21:43:38"
+    }
+]
