@@ -6,7 +6,21 @@
         "access": "Public",
         "lang": "English",
         "dt": "",
-        "signupdt": "09/07/2024 21:43:38"
+        "signupdt": "09/07/2024 21:43:38",
+        "members":[
+            {
+                "uid":"vj1",
+                "permission":"owner"
+            },
+            {
+                "uid":"vj2",
+                "permission":"admin"
+            },
+            {
+                "uid":"vj2",
+                "permission":"viewer"
+            }
+        ]
     },
     {
         "uid": "vj1",
