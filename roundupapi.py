@@ -183,17 +183,21 @@ def addUser(userData):
     try:
         if userData["uid"] != "":
             SRUsername = userData["uid"];
-            if not os.path.exists("USERDATA/"+userData[0].upper()+"_User"):
-                os.makedirs("USERDATA/"+userData[0].upper()+"_User");
-            if not os.path.exists("USERDATA/"+userData[0].upper()+"_User/"+userData[:2].upper()+"_User"):
-                os.makedirs("USERDATA/"+userData[0].upper()+"_User/"+userData[:2].upper()+"_User");
+        
+            if not os.path.exists("USERDATA/"+SRUsername[0].upper()+"_User"):
+                os.makedirs("USERDATA/"+SRUsername[0].upper()+"_User");
+            if not os.path.exists("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User"):
+                os.makedirs("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User");
             
             SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt";
+            
             if not os.path.exists("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename):
                 string_list = []
+                
                 string_list.append(userData)
                 with open("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'w') as file:
                     file.write(json.dumps(string_list))
+                RespsignupStatus["status"] =  "Success"
             else:
                 with open(r"USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'r+') as u:
                     userDataObj = json.load(u, strict=False)
@@ -231,7 +235,7 @@ def validateUserLoginDetails(userLoginData):
     try:
         if userLoginData["uid"] != "":
             SRUsername = userLoginData["uid"];
-            SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt"
+            SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt";
             with open(r"USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'r+') as f:
                 userListObj = json.load(f, strict=False)
                 userPwd = hashlib.sha384(str(userLoginData["uid"] + userLoginData["pwd"]).encode()).hexdigest()
@@ -290,12 +294,12 @@ def createChannel(channelData, chName):
                 json.dump(channelDataObj, h, indent=4)    
                 h.truncate() 
 
-        userchannel = json.loads({"name":channelData["name"], "access":channelData["access"], "permission":"owner"});
-        addUserChannel(userchannel);
-        return "Channel Created"
+        # userchannel = json.loads({"name":channelData["name"], "access":channelData["access"], "permission":"owner"});
+        # addUserChannel(userchannel);
+        return "Success"
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
-        return "SignUp Failed"
+        return "Failed"
     
 @app.route('/addChannelmembers/<string:channelId>', methods=['POST'])
 @token_required
@@ -335,7 +339,7 @@ def addUserChannel(channelData):
         if channelData["uid"] != "":
             SRUsernameWL = channelData["uid"];
             SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
-            with open(r"COMDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+            with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cm:
                 channelDataObj = json.load(cm, strict=False)
                 for row in channelDataObj:
                     if row["uid"] == channelData["uid"]:
