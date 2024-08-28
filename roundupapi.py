@@ -16,7 +16,7 @@ b = BSE();
 b = BSE(update_codes = True);
 
 ns = Nse()
-logging.basicConfig(filename='error.log', level=logging.ERROR, format='%(asctime)s:%(levelname)s:%(message)s')
+#logging.basicConfig(filename='error.log', level=logging.ERROR, format='%(asctime)s:%(levelname)s:%(message)s')
 
 # stData = {
 #         "uid": "vj1",
@@ -45,6 +45,9 @@ RespsignupStatus={
 @app.route('/')
 def index():
     return 'Hello StockRoundup12'
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
 
 # @app.route('/stocks')
 # def getStocks():
@@ -383,17 +386,54 @@ def addWatchList(wathListData):
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
         return "WatchList not added to the User"
+    
+@app.route('/removeUserWatchList', methods=['POST'])
+@token_required
+def removeUserWatchList():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    return removeWatchListByUser(json_object)
+
+def removeWatchListByUser(wathListData):
+     try:
+        print(wathListData);
+        if wathListData["uid"] != "":
+            SRUsernameWL = wathListData["uid"];
+            SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+            print(SRUserFilename);
+            with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cr:
+                watchListObj = json.load(cr, strict=False)
+                print(watchListObj);
+                for rowWL in watchListObj:
+                    print(rowWL);
+                    if rowWL["uid"] == wathListData["uid"]:
+                        print(rowWL["watchList"]);
+                        print(wathListData["watchList"]);
+                        data = [row for row in rowWL["watchList"] if (row["options"] != wathListData["options"] and row["symbol"] != wathListData["symbol"])]
+                        print(data);
+                        rowWL["watchList"] = data
+
+                cr.seek(0)    
+                json.dumps(watchListObj, cr, indent=4)    
+                cr.truncate() 
+            return "Success"
+     except Exception as e:
+        print(e);
+        logging.error(f"An Error Occured: {e}")
+        return "Failed"
+
 
 @app.route('/removeChannelmembers', methods=['POST'])
 @token_required
-def removeChannelmembers(channelId):
+def removeChannelmembers():
     data = request.get_data();
     json_object = json.loads(data); 
-    return removeChannelmember(channelId,json_object)
+    return removeChannelmember(json_object)
 
-def removeChannelmember(channelId, channelData):
+def removeChannelmember(channelData):
     try:
         if channelData["uid"] != "":
+            channelId = channelData["name"]
             with open(r"CHANNEL/"+channelId[0].upper()+"_Channel/"+channelId[0].upper()+"_"+channelId[1].upper()+"_Channel.txt", 'r+') as h:
                 channelListObj = json.load(h, strict=False)
                 data = [row for row in channelListObj if (row["name"] != channelListObj["name"])]
@@ -413,7 +453,7 @@ def removeChannelmember(channelId, channelData):
 def removeUserChannel():
     data = request.get_data();
     json_object = json.loads(data); 
-    return removeChannelmember(json_object)
+    return removeChannelByUser(json_object)
 
 def removeChannelByUser(ChannelData):
      try:
@@ -426,33 +466,21 @@ def removeChannelByUser(ChannelData):
                 cr.seek(0)    
                 json.dumps(data, cr, indent=4)    
                 cr.truncate() 
+            
+            if ChannelData["uid"] != "":
+                channelId = ChannelData["name"]
+                with open(r"CHANNEL/"+channelId[0].upper()+"_Channel/"+channelId[0].upper()+"_"+channelId[1].upper()+"_Channel.txt", 'r+') as h:
+                    channelListObj = json.load(h, strict=False)
+                    data = [row for row in channelListObj if (row["name"] != channelId)]
+                    h.seek(0)    
+                    json.dumps(data, h, indent=4)    
+                    h.truncate() 
+                
             return "Success"
      except Exception as e:
         logging.error(f"An Error Occured: {e}")
         return "Failed"
 
-@app.route('/removeUserWatchList', methods=['POST'])
-@token_required
-def removeUserWatchList():
-    data = request.get_data();
-    json_object = json.loads(data); 
-    return removeChannelmember(json_object)
-
-def removeWatchListByUser(wathListData):
-     try:
-        if wathListData["uid"] != "":
-            SRUsernameWL = wathListData["uid"];
-            SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
-            with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cr:
-                watchListObj = json.loads(cr, strict=False)
-                data = [row for row in watchListObj if (row["options"] != wathListData["options"] and row["symbol"] != wathListData["symbol"])]
-                cr.seek(0)    
-                json.dumps(data, cr, indent=4)    
-                cr.truncate() 
-            return "Success"
-     except Exception as e:
-        logging.error(f"An Error Occured: {e}")
-        return "Failed"
 
 #Get Stock feed
 @app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
