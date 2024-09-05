@@ -485,7 +485,7 @@ def removeChannelByUser(ChannelData):
 #Get Stock feed
 @app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
 def getStockFeedbyId(stquoteId):
-    stockFeedObj = [];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices or Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors or traders in the Stock market Community with the Language and Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
         filepath =  stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
@@ -494,11 +494,12 @@ def getStockFeedbyId(stquoteId):
                 stockFeedObj = json.load(f, strict=False)
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
+
     return stockFeedObj
 
 @app.route('/indicesfeed/<string:IndicesId>', methods = ['GET'])
 def getIndicesFeedbyId(IndicesId):
-    stockFeedObj = [];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  IndicesId[0].upper()+IndicesId[:2].upper()+"_"+str(ord(IndicesId[0].upper()))+IndicesId+".txt";
         if os.path.exists("INDSFD/"+filename):
@@ -510,7 +511,7 @@ def getIndicesFeedbyId(IndicesId):
 
 @app.route('/channelfeed/<string:chennalId>', methods = ['GET'])
 def getChannelFeedbyId(chennalId):
-    stockFeedObj = [];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Channel is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  chennalId[0].upper()+chennalId[:2].upper()+"_"+str(ord(chennalId[0].upper()))+chennalId+".txt";
         filepath =  chennalId[0].upper()+"_Channel/"+chennalId[:2].upper()+"_Channel/"+filename;
@@ -523,7 +524,7 @@ def getChannelFeedbyId(chennalId):
 
 @app.route('/otherfeed/<string:otherId>', methods = ['GET'])
 def getOtherFeedbyId(otherId):
-    stockFeedObj = [];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  otherId[0].upper()+otherId[:2].upper()+"_"+str(ord(otherId[0].upper()))+otherId+".txt";
         if os.path.exists("OTFD/"+filename):

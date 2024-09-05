@@ -1,0 +1,107 @@
+[
+    {
+        "uid": "VijayTest1",
+        "fname": "Vijayakumar",
+        "pwd": "Vijay123#",
+        "email": "vijaytest1@sr.com",
+        "mobile": "9090909118",
+        "lang": "English",
+        "signupdt": "04/08/2024 22:57:45",
+        "signupSysFind": "106.222.220.216",
+        "tcAgree": "No",
+        "tcAgreeDate": "",
+        "watchList": [],
+        "channels": []
+    },
+    {
+        "uid": "VijayTest2",
+        "fname": "Vijayakumr",
+        "pwd": "8d26b9a0fcffcd0945ba25f8aeba99b3949aa3350e3d37e1811ddc8c668412e29a4ae5fc3ff6d5d433b7af90ee632b8f",
+        "email": "vijaytest2@sr.com",
+        "mobile": "9090909117",
+        "lang": "English",
+        "signupdt": "04/08/2024 22:58:46",
+        "signupSysFind": "",
+        "tcAgree": "No",
+        "tcAgreeDate": "",
+        "watchList": [
+            {
+                "options": "Stocks",
+                "symbol": "CTS"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "TCS"
+            },
+            {
+                "options": "Indices",
+                "symbol": "NIFTY"
+            },
+            {
+                "options": "Stocks",
+                "symbol": "TS"
+            },
+            {
+                "options": "Channel",
+                "symbol": "NewChannel"
+            }
+        ],
+        "channels": [
+            {
+                "access": "Public",
+                "name": "NewChannel",
+                "permission": "Owner"
+            },
+            {
+                "access": "Private",
+                "name": "NewChannel2",
+                "permission": "Owner"
+            },
+            {
+                "access": "Public",
+                "name": "AddedChannel",
+                "permission": "Owner"
+            },
+            {
+                "access": "Private",
+                "name": "USStockChannel",
+                "permission": "Owner"
+            },
+            {
+                "access": "Private",
+                "name": "AsianStockChann",
+                "permission": "Viewer"
+            },
+            {
+                "access": "Private",
+                "name": "GetGoodStocks",
+                "permission": "Owner"
+            },
+            {
+                "name": "BullStocks",
+                "access": "Public",
+                "permission": "Owner"
+            }
+        ]
+    },
+    {
+        "uid": "VijayTest3",
+        "fname": "Vijay Test3",
+        "pwd": "28733fec9ca075956e5dc1c9c90ec4f9c6d8a5ec9908c2159c9380d370a6814e2698e5f1bd7b090a66cd88cdae2c113f",
+        "email": "vijaytest3@stockroundup.com",
+        "mobile": "2121212121",
+        "lang": "English",
+        "signupdt": "05/09/2024 00:29:10",
+        "signupSysFind": "",
+        "tcAgree": "No",
+        "tcAgreeDate": "",
+        "watchList": [],
+        "channels": [
+            {
+                "name": "New Channel",
+                "access": "Public",
+                "permission": "Owner"
+            }
+        ]
+    }
+]

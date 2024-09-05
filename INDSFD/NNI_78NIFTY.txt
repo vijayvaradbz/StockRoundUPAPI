@@ -1,0 +1,38 @@
+[
+    {
+        "uid": "VijayTest2",
+        "cmt": "Main Discussion ",
+        "lang": "English",
+        "dt": "05/08/2024 20:07:08"
+    },
+    {
+        "uid": "VijayTest2",
+        "cmt": "Select the Option(Indices/Stocks/Channel) and enter the sysmbol to view the Opinion/View of Other Traders/Investors. Stock Roundup team doesn't certify/recommend",
+        "lang": "English",
+        "dt": "05/08/2024 20:06:55"
+    },
+    {
+        "uid": "VijayTest2",
+        "cmt": "Select the Option(Indices/Stocks/Channel) and enter the sysmbol to view the Opinion/View of Other Traders/Investors. Stock Roundup team doesn't certify/recommend or validate any Opinions/Views posted in this thread.",
+        "lang": "English",
+        "dt": "05/08/2024 20:06:44"
+    },
+    {
+        "uid": "VijayTest2",
+        "cmt": "Select the Option(Indices/Stocks/Channel) and enter the sysmbol to view the Opinion/View of Other Traders/Investors. Stock Roundup team doesn't certify/recommend or validate any Opinions/Views posted in this thread. ",
+        "lang": "English",
+        "dt": "05/08/2024 16:41:30"
+    },
+    {
+        "uid": "VijayTest2",
+        "cmt": "Tested ",
+        "lang": "English",
+        "dt": "05/08/2024 16:41:12"
+    },
+    {
+        "uid": "VijayTest2",
+        "cmt": "Test Nifty",
+        "lang": "English",
+        "dt": "04/08/2024 23:22:02"
+    }
+]
