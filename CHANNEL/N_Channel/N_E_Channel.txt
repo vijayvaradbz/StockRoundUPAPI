@@ -1,0 +1,40 @@
+[
+    {
+        "uid": "VijayTest2",
+        "name": "NewChannel",
+        "desc": "NewChannel",
+        "access": "Public",
+        "permission": "Owner",
+        "lang": "English",
+        "dt": "04/08/2024 23:09:02"
+    },
+    {
+        "uid": "VijayTest2",
+        "name": "NewChannel2",
+        "desc": "NewChannel2",
+        "access": "Private",
+        "permission": "Owner",
+        "lang": "English",
+        "dt": "04/08/2024 23:18:20"
+    },
+    {
+        "uid": "VijayTest3",
+        "name": "New Channel",
+        "desc": "Channel Desc",
+        "access": "Public",
+        "permission": "Owner",
+        "lang": "English",
+        "dt": "05/09/2024 00:29:54",
+        "members": []
+    },
+    {
+        "uid": "VijayTest3",
+        "name": "New Channel",
+        "desc": "Channel Desc",
+        "access": "Public",
+        "permission": "Owner",
+        "lang": "English",
+        "dt": "05/09/2024 00:29:54",
+        "members": []
+    }
+]

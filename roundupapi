@@ -1,0 +1,10 @@
+server {
+   listen 80;
+   server_name stockroundup.in;
+
+   location /static/ {
+	alias /home/sradmin/roundupapi/static;
+	include proxy_params;
+	proxy_pass https://unix:/home/sradmin/roundupapi/roundupapi.sock;
+   }
+}

@@ -1,0 +1,1 @@
+[{"uid": "Vvijaynet", "fname": "Vijayakumar", "pwd": "Vijay123#", "email": "vijaytest@sr.com", "mobile": "9090909119", "lang": "English", "signupdt": "04/08/2024 22:53:45", "signupSysFind": "106.222.220.216", "tcAgree": "No", "tcAgreeDate": "", "watchList": [], "channels": []}]
