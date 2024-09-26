@@ -8,14 +8,14 @@ app = Flask(__name__)
 CORS(app)
 import json
 from datetime import datetime, timedelta
-from bsedata.bse import BSE
-from nsetools import Nse
+# from bsedata.bse import BSE
+# from nsetools import Nse
 import jwt
 
-b = BSE();
-b = BSE(update_codes = True);
+# b = BSE();
+# b = BSE(update_codes = True);
 
-ns = Nse()
+# ns = Nse()
 #logging.basicConfig(filename='error.log', level=logging.ERROR, format='%(asctime)s:%(levelname)s:%(message)s')
 
 # stData = {
@@ -34,6 +34,10 @@ ResploginStatus = {
 RespsignupStatus={
     "status":"Failed"
 }
+
+RespChannelData = {
+       "members": ""
+    }
 
 # addUserData = {
 #         "uid": "vj1",
@@ -99,6 +103,25 @@ def stockfeeddetails(stquoteId):
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
         return "[]"
+    
+@app.route('/addfeeddetails', methods=['POST'])
+def addfeeddetails():
+    try:
+        data = request.get_data()
+        json_object = json.loads(data)
+        json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        stquoteId = json_object["stQuoteId"];
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks");
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks");
+        filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
+        filepath = "STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
+        return stockfeeddetail(filepath, stquoteId, json_object)
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+        return "[]"
+
 
 
 @app.route('/indicesfeeddetails/<string:stquoteId>', methods=['POST'])
@@ -122,12 +145,13 @@ def channelfeeddetails(chquoteId):
         data = request.get_data()
         json_object = json.loads(data)
         json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        if not os.path.exists("CHFD/"+chquoteId[0].upper()+"_Channel"):
-            os.makedirs("CHFD/"+chquoteId[0].upper()+"_Channel");
-        if not os.path.exists("CHFD/"+chquoteId[0].upper()+"_Channel/"+chquoteId[:2].upper()+"_Channel"):
-            os.makedirs("CHFD/"+chquoteId[0].upper()+"_Channel/"+chquoteId[:2].upper()+"_Channel");
+
+        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_Stocks"):
+            os.makedirs("STKFD/"+chquoteId[0].upper()+"_Stocks");
+        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks"):
+            os.makedirs("STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks");
         filename =  chquoteId[0].upper()+chquoteId[:2].upper()+"_"+str(ord(chquoteId[0].upper()))+chquoteId+".txt";
-        filepath = "CHFD/"+chquoteId[0].upper()+"_Channel/"+chquoteId[:2].upper()+"_Channel/"+filename;
+        filepath = "STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks/"+filename;
         return stockfeeddetail(filepath, chquoteId, json_object)
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
@@ -196,7 +220,9 @@ def addUser(userData):
             
             if not os.path.exists("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename):
                 string_list = []
-                
+                userData["pwd"] = hashlib.sha384(str(userData["uid"] + userData["pwd"]).encode()).hexdigest()
+                userData["signupdt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                userData["lang"] = "English";
                 string_list.append(userData)
                 with open("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'w') as file:
                     file.write(json.dumps(string_list))
@@ -237,6 +263,7 @@ def validateUserLoginDetails(userLoginData):
     ResploginStatus["channelList"] = '[]';
     try:
         if userLoginData["uid"] != "":
+            # SRUserToken = generate_auth_token(userLoginData["uid"]);
             SRUsername = userLoginData["uid"];
             SRUserFilename = SRUsername[0].upper()+SRUsername[:2].upper()+"_"+str(ord(SRUsername[0].upper()))+"_SRUPUsers.txt";
             with open(r"USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'r+') as f:
@@ -245,7 +272,7 @@ def validateUserLoginDetails(userLoginData):
                 user = next(filter(lambda row: row["uid"].upper() == userLoginData["uid"].upper() and row["pwd"] == userPwd, userListObj), None);
                 if(user != None):
                     ResploginStatus["loginstatus"] = "Success";
-                    ResploginStatus["token"] = generate_auth_token(user["uid"]);
+                    ResploginStatus["token"] = "SRUserToken";
                     ResploginStatus["name"] = user["uid"];
                     ResploginStatus["watchList"] = user["watchList"];
                     ResploginStatus["channelList"] = user["channels"];
@@ -253,6 +280,47 @@ def validateUserLoginDetails(userLoginData):
         logging.error(f"An Error Occured: {e}")
                 
     return ResploginStatus;
+
+@app.route('/getChannelMembers', methods=['POST'])
+def getChannelMembers():
+    data = request.get_data();
+    channelData = json.loads(data); 
+    return getPrivateChannelMembers(channelData)
+
+def getPrivateChannelMembers(channelData):
+    RespChannelData["members"] = '[]';
+    chName = channelData["name"]
+    try:
+        with open(r"CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'r+') as h:
+            channelDataObj = json.load(h, strict=False);
+            channelObj = next(filter(lambda row: row["name"].upper() == chName.upper(),channelDataObj), None);
+            if(channelObj != None):
+                RespChannelData["members"] = channelObj["members"];
+        
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+    return RespChannelData
+                
+
+@app.route('/addChannelMembersDel', methods=['POST'])
+def addChannelMembersDel():
+    data = request.get_data();
+    channelData = json.loads(data); 
+    return getPrivateChannelMembers(channelData)
+
+def addPrivateChannelMembers(channelData):
+    RespChannelData["members"] = '[]';
+    chName = channelData["name"]
+    try:
+        with open(r"CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'r+') as h:
+            channelDataObj = json.load(h, strict=False);
+            channelObj = next(filter(lambda row: row["name"].upper() == chName.upper(),channelDataObj), None);
+            if(channelObj != None):
+                RespChannelData["members"] = channelObj["members"];
+        
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+    return RespChannelData
 
 def generate_auth_token(userID):
     secret_key = "SRa1b2c3d4A1B2C3D4Roundup"
@@ -304,26 +372,117 @@ def createChannel(channelData, chName):
         logging.error(f"An Error Occured: {e}")
         return "Failed"
     
-@app.route('/addChannelmembers/<string:channelId>', methods=['POST'])
-@token_required
-def addChannelMembers(channelId):
+@app.route('/addChannelmembers', methods=['POST'])
+def addChannelMembers():
     data = request.get_data();
     json_object = json.loads(data); 
-    return addChannelMember(channelId,json_object)
+    channelId = json_object["ChannelId"]
+    channelData = json_object["ChannelData"]
+    print(json_object);
+    return addChannelMember(channelId,channelData)
 
 def addChannelMember(channelId, channelData):
     try:
-        if channelData["uid"] != "":
+        if channelId != "":
             with open(r"CHANNEL/"+channelId[0].upper()+"_Channel/"+channelId[0].upper()+"_"+channelId[1].upper()+"_Channel.txt", 'r+') as h:
                 channelListObj = json.load(h, strict=False)
+                print(channelListObj)
                 for row in channelListObj:
-                    if row["name"] == channelData["name"]:
+                    if row["name"] == channelId:
                         row["members"].append(channelData);
                         break;
                 
                 h.seek(0)    
                 json.dump(channelListObj, h, indent=4)    
                 h.truncate() 
+                return "Success"
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+        return "Member is not added to the Channel"
+    
+
+@app.route('/addChanneltoUsers', methods=['POST'])
+def addChanneltoUsers():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    return addChanneltoUser(json_object)
+
+def addChanneltoUser(channelData):
+    try:
+        if channelData["uid"] != "":
+            SRUsernameWL = channelData["uid"];
+            SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+            with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+                channelDataObj = json.load(cm, strict=False)
+                chUserList = [];
+                for row in channelDataObj:
+                    if row["uid"] == channelData["uid"]:
+                        row["channels"].append(channelData["channelList"])
+                        cm.seek(0)  
+                        json.dump(channelDataObj, cm, indent=4)    
+                        cm.truncate() 
+                        break;
+                
+            return channelData
+        return "{}"
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+        return "Member is not added to the Channel"
+    
+
+@app.route('/removeChannelmember', methods=['POST'])
+def removeChannelMember():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    return removeChMember(json_object)
+
+def removeChMember(channelData):
+    try:
+        channelId = channelData["ChannelId"]
+        if channelId != "":
+            with open(r"CHANNEL/"+channelId[0].upper()+"_Channel/"+channelId[0].upper()+"_"+channelId[1].upper()+"_Channel.txt", 'r+') as h:
+                channelListObj = json.load(h, strict=False)
+                
+                for rowCH in channelListObj:
+                    if rowCH["name"] == channelId:
+                        data = [row for row in rowCH["members"] if (row["userName"] != channelData["userName"])]
+                        rowCH["members"] = data
+                        break;
+                
+                h.seek(0)    
+                json.dump(channelListObj, h, indent=4)    
+                h.truncate() 
+                return "Success"
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+        return "Member is not added to the Channel"
+    
+
+@app.route('/removeChannelfromUsers', methods=['POST'])
+def removeChannelfromUsers():
+    data = request.get_data();
+    json_object = json.loads(data); 
+    return removeChannelfromUser(json_object)
+
+def removeChannelfromUser(channelData):
+    try:
+        if channelData["uid"] != "":
+            SRUsernameWL = channelData["uid"];
+            SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
+            with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cm:
+                channelDataObj = json.load(cm, strict=False)
+                chUserList = [];
+                for rowCh in channelDataObj:
+                    if rowCh["uid"] == channelData["uid"]:
+                        data = [row for row in rowCh["channels"] if (row["name"] != channelData["name"])]
+                        rowCh["channels"] = data
+                        cm.seek(0)  
+                        json.dump(channelDataObj, cm, indent=4)    
+                        cm.truncate() 
+                        break;
+                
+            return channelData
+        return "{}"
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
         return "Member is not added to the Channel"
@@ -388,7 +547,6 @@ def addWatchList(wathListData):
         return "WatchList not added to the User"
     
 @app.route('/removeUserWatchList', methods=['POST'])
-@token_required
 def removeUserWatchList():
     data = request.get_data();
     json_object = json.loads(data); 
@@ -396,25 +554,19 @@ def removeUserWatchList():
 
 def removeWatchListByUser(wathListData):
      try:
-        print(wathListData);
         if wathListData["uid"] != "":
             SRUsernameWL = wathListData["uid"];
             SRUserFilename = SRUsernameWL[0].upper()+SRUsernameWL[:2].upper()+"_"+str(ord(SRUsernameWL[0].upper()))+"_SRUPUsers.txt"
-            print(SRUserFilename);
             with open(r"USERDATA/"+SRUsernameWL[0].upper()+"_User/"+SRUsernameWL[:2].upper()+"_User/"+SRUserFilename, 'r+') as cr:
-                watchListObj = json.load(cr, strict=False)
-                print(watchListObj);
+                watchListObj = json.load(cr, strict=False);
                 for rowWL in watchListObj:
-                    print(rowWL);
-                    if rowWL["uid"] == wathListData["uid"]:
-                        print(rowWL["watchList"]);
-                        print(wathListData["watchList"]);
-                        data = [row for row in rowWL["watchList"] if (row["options"] != wathListData["options"] and row["symbol"] != wathListData["symbol"])]
-                        print(data);
+                   if rowWL["uid"] == wathListData["uid"]:
+                        # data = [row for row in rowWL["watchList"] if (row["options"] != wathListData["options"] and row["symbol"] != wathListData["symbol"])]
+                        data = [row for row in rowWL["watchList"] if (row["symbol"] != wathListData["symbol"])]
                         rowWL["watchList"] = data
 
                 cr.seek(0)    
-                json.dumps(watchListObj, cr, indent=4)    
+                json.dump(watchListObj, cr, indent=4)    
                 cr.truncate() 
             return "Success"
      except Exception as e:
@@ -485,7 +637,7 @@ def removeChannelByUser(ChannelData):
 #Get Stock feed
 @app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
 def getStockFeedbyId(stquoteId):
-    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices or Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors or traders in the Stock market Community with the Language and Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
         filepath =  stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
@@ -497,9 +649,28 @@ def getStockFeedbyId(stquoteId):
 
     return stockFeedObj
 
+@app.route('/stkfeed', methods=['POST'])
+def getStkFeedbyId():
+    data = request.get_data();
+    jsonData = json.loads(data); 
+    stquoteId = jsonData["symbol"];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
+    try:
+        filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
+        filepath =  stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
+        if os.path.exists("STKFD/"+filepath):
+            with open(r"STKFD/"+filepath, 'r+') as f:
+                stockFeedObj = json.load(f, strict=False)
+    except Exception as e:
+        logging.error(f"An Error Occured: {e}")
+
+    return stockFeedObj
+
+
+
 @app.route('/indicesfeed/<string:IndicesId>', methods = ['GET'])
 def getIndicesFeedbyId(IndicesId):
-    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  IndicesId[0].upper()+IndicesId[:2].upper()+"_"+str(ord(IndicesId[0].upper()))+IndicesId+".txt";
         if os.path.exists("INDSFD/"+filename):
@@ -511,7 +682,7 @@ def getIndicesFeedbyId(IndicesId):
 
 @app.route('/channelfeed/<string:chennalId>', methods = ['GET'])
 def getChannelFeedbyId(chennalId):
-    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Channel is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Channel is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  chennalId[0].upper()+chennalId[:2].upper()+"_"+str(ord(chennalId[0].upper()))+chennalId+".txt";
         filepath =  chennalId[0].upper()+"_Channel/"+chennalId[:2].upper()+"_Channel/"+filename;
@@ -524,7 +695,7 @@ def getChannelFeedbyId(chennalId):
 
 @app.route('/otherfeed/<string:otherId>', methods = ['GET'])
 def getOtherFeedbyId(otherId):
-    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()}];
+    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  otherId[0].upper()+otherId[:2].upper()+"_"+str(ord(otherId[0].upper()))+otherId+".txt";
         if os.path.exists("OTFD/"+filename):
@@ -549,30 +720,30 @@ def globalIndices():
 def checkSitefortesting():
     return "API Test is Valid"
 
-@app.route('/bsestocklist')
-def getBSEStockList():
-    print(b.getScripCodes())
-    with open(r"BSEStockListDetails.txt", 'r+') as ubse:
-        ubse.seek(0)    
-        json.dump(b.getScripCodes(), ubse, indent=4)    
-        ubse.truncate() 
-    return (b.getScripCodes())
+# @app.route('/bsestocklist')
+# def getBSEStockList():
+#     print(b.getScripCodes())
+#     with open(r"BSEStockListDetails.txt", 'r+') as ubse:
+#         ubse.seek(0)    
+#         json.dump(b.getScripCodes(), ubse, indent=4)    
+#         ubse.truncate() 
+#     return (b.getScripCodes())
 
 
 #Get Stock List from NSE and BSE
-@app.route('/nsestocklist')
-def getNSEStockList():
-    print(ns.get_index_list('self'));
-    print(ns.get_stock_codes())
-    with open(r"NSEStockListDetails.txt", 'r+') as unse:
-        unse.seek(0)    
-        json.dump(ns.get_index_list(), unse, indent=4)    
-        unse.truncate();
-    with open(r"NSEStockCodeList.txt", 'r+') as unse1:
-        unse1.seek(0)    
-        json.dump(ns.get_stock_codes(), unse1, indent=4)    
-        unse1.truncate() 
-    return (ns.get_stock_codes())
+# @app.route('/nsestocklist')
+# def getNSEStockList():
+#     print(ns.get_index_list('self'));
+#     print(ns.get_stock_codes())
+#     with open(r"NSEStockListDetails.txt", 'r+') as unse:
+#         unse.seek(0)    
+#         json.dump(ns.get_index_list(), unse, indent=4)    
+#         unse.truncate();
+#     with open(r"NSEStockCodeList.txt", 'r+') as unse1:
+#         unse1.seek(0)    
+#         json.dump(ns.get_stock_codes(), unse1, indent=4)    
+#         unse1.truncate() 
+#     return (ns.get_stock_codes())
 
 
 #Get Live Stock Data
