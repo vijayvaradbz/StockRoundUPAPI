@@ -35,6 +35,10 @@ RespsignupStatus={
     "status":"Failed"
 }
 
+RespAddChannelStatus={
+    "status":"Failed"
+}
+
 RespChannelData = {
        "members": ""
     }
@@ -93,12 +97,12 @@ def stockfeeddetails(stquoteId):
         data = request.get_data()
         json_object = json.loads(data)
         json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks");
-        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks");
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_SRNBDiary");
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary");
         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
-        filepath = "STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
+        filepath = "STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary/"+filename;
         return stockfeeddetail(filepath, stquoteId, json_object)
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
@@ -111,12 +115,12 @@ def addfeeddetails():
         json_object = json.loads(data)
         json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         stquoteId = json_object["stQuoteId"];
-        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks");
-        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks");
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_SRNBDiary");
+        if not os.path.exists("STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary");
         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
-        filepath = "STKFD/"+stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
+        filepath = "STKFD/"+stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary/"+filename;
         return stockfeeddetail(filepath, stquoteId, json_object)
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
@@ -146,12 +150,12 @@ def channelfeeddetails(chquoteId):
         json_object = json.loads(data)
         json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+chquoteId[0].upper()+"_Stocks");
-        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks"):
-            os.makedirs("STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks");
+        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+chquoteId[0].upper()+"_SRNBDiary");
+        if not os.path.exists("STKFD/"+chquoteId[0].upper()+"_SRNBDiary/"+chquoteId[:2].upper()+"_SRNBDiary"):
+            os.makedirs("STKFD/"+chquoteId[0].upper()+"_SRNBDiary/"+chquoteId[:2].upper()+"_SRNBDiary");
         filename =  chquoteId[0].upper()+chquoteId[:2].upper()+"_"+str(ord(chquoteId[0].upper()))+chquoteId+".txt";
-        filepath = "STKFD/"+chquoteId[0].upper()+"_Stocks/"+chquoteId[:2].upper()+"_Stocks/"+filename;
+        filepath = "STKFD/"+chquoteId[0].upper()+"_SRNBDiary/"+chquoteId[:2].upper()+"_SRNBDiary/"+filename;
         return stockfeeddetail(filepath, chquoteId, json_object)
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
@@ -223,14 +227,17 @@ def addUser(userData):
                 userData["pwd"] = hashlib.sha384(str(userData["uid"] + userData["pwd"]).encode()).hexdigest()
                 userData["signupdt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 userData["lang"] = "English";
+                print(userData);
                 string_list.append(userData)
+                print(string_list);
                 with open("USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'w') as file:
                     file.write(json.dumps(string_list))
-                RespsignupStatus["status"] =  "Success"
+                    RespsignupStatus["status"] =  "Success"
             else:
                 with open(r"USERDATA/"+SRUsername[0].upper()+"_User/"+SRUsername[:2].upper()+"_User/"+SRUserFilename, 'r+') as u:
                     userDataObj = json.load(u, strict=False)
-                    user = next(filter(lambda row: row["uid"].upper() == userData["uid"].upper() and row["email"].upper() == userData["email"].upper(), userDataObj), None);
+                    # user = next(filter(lambda row: row["uid"].upper() == userData["uid"].upper() and row["email"].upper() == userData["email"].upper(), userDataObj), None);
+                    user = next(filter(lambda row: row["uid"].upper() == userData["uid"].upper(), userDataObj), None);
                     if(user != None):
                         RespsignupStatus["status"] = "DuplicateUserID"
                     else:
@@ -345,32 +352,85 @@ def addChannel():
     data = request.get_data();
     json_object = json.loads(data); 
     json_object["dt"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S");
-    return createChannel(json_object, json_object["name"])
+    return createChannel(json_object)
 
-def createChannel(channelData, chName):
+def createChannel(channelData):
     try:
+        chName = channelData["name"]
+        # if not os.path.exists("STKFD/"+chName[0].upper()+"_SRNBDiary"):
+        #     os.makedirs("STKFD/"+chName[0].upper()+"_SRNBDiary");
+        # if not os.path.exists("STKFD/"+chName[0].upper()+"_SRNBDiary/"+chName[:2].upper()+"_SRNBDiary"):
+        #     os.makedirs("STKFD/"+chName[0].upper()+"_SRNBDiary/"+chName[:2].upper()+"_SRNBDiary");
+        # filename =  chName[0].upper()+chName[:2].upper()+"_"+str(ord(chName[0].upper()))+chName+".txt";
+        # filepath = "STKFD/"+chName[0].upper()+"_SRNBDiary/"+chName[:2].upper()+"_SRNBDiary/"+filename;
         if not os.path.exists("CHANNEL/"+chName[0].upper()+"_Channel"):
             os.makedirs("CHANNEL/"+chName[0].upper()+"_Channel");
         
-        if not os.path.exists("CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt"):
+        folderID = "CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt";
+        if not os.path.exists(folderID):
             string_list = []
             string_list.append(channelData)
-            with open("CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'w') as file:
+            with open(folderID, 'w') as file:
                 file.write(json.dumps(string_list))
+                RespAddChannelStatus["status"] = "Success"
         else:
-            with open(r"CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'r+') as h:
-                channelDataObj = json.load(h, strict=False)
-                channelDataObj.append(channelData)
-                h.seek(0)    
-                json.dump(channelDataObj, h, indent=4)    
-                h.truncate() 
+            with open(r""+folderID, 'r+') as f:
+                dataObj = json.load(f, strict=False)
+                print(channelData["name"]);
+                channelNameExists = next(filter(lambda row: row["name"].upper() == channelData["name"].upper(), dataObj), None);
+                print(channelNameExists);
+                if(channelNameExists != None):
+                    RespAddChannelStatus["status"] = "DuplicateChannelName"
+                else:
+                    f.seek(0)  
+                    dataObj.append(channelData)      
+                    json.dump(dataObj, f, indent=4)
+                    f.truncate() 
+                    RespAddChannelStatus["status"] = "Success"
+        
+        return RespAddChannelStatus;
+    # except Exception as e:
+    #     logging.error(f"An Error Occured: {e}")
+    #     return "[]"
+        
+        # print("Test");
+        # if not os.path.exists("CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt"):
+        #     string_list = []
+        #     print(channelData);
+        #     string_list.append(channelData)
+        #     print(string_list);
+        #     with open("CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'w') as file:
+        #         channelDataObj = json.load(file, strict=False)
+        #         print(channelDataObj);
+        #         channelNameExists = next(filter(lambda row: row["name"].upper() == channelData["name"].upper(), channelDataObj), None);
+        #         print(channelNameExists);
+        #         if(channelNameExists != None):
+        #             RespAddChannelStatus["status"] = "DuplicateChannelName"
+        #         else:
+        #             file.write(json.dumps(string_list))
+        #             RespAddChannelStatus["status"] = "Success"
+        # else:
+        #     with open(r"CHANNEL/"+chName[0].upper()+"_Channel/"+chName[0].upper()+"_"+chName[1].upper()+"_Channel.txt", 'r+') as h:
+        #         channelDataObj = json.load(h, strict=False)
+        #         print(channelDataObj);
+        #         channelNameExists = next(filter(lambda row: row["name"].upper() == channelData["name"].upper(), channelDataObj), None);
+        #         print(channelNameExists);
+        #         if(channelNameExists != None):
+        #             RespAddChannelStatus["status"] = "DuplicateChannelName"
+        #         else:
+        #             channelDataObj.append(channelData)
+        #             h.seek(0)    
+        #             json.dump(channelDataObj, h, indent=4)    
+        #             h.truncate() 
+        #             RespAddChannelStatus["status"] = "Success"
 
         # userchannel = json.loads({"name":channelData["name"], "access":channelData["access"], "permission":"owner"});
         # addUserChannel(userchannel);
-        return "Success"
+        # return RespAddChannelStatus
     except Exception as e:
         logging.error(f"An Error Occured: {e}")
-        return "Failed"
+        RespAddChannelStatus["status"] = "Failed"
+        return RespAddChannelStatus;
     
 @app.route('/addChannelmembers', methods=['POST'])
 def addChannelMembers():
@@ -635,19 +695,19 @@ def removeChannelByUser(ChannelData):
 
 
 #Get Stock feed
-@app.route('/stockfeed/<string:stquoteId>', methods = ['GET'])
-def getStockFeedbyId(stquoteId):
-    stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
-    try:
-        filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
-        filepath =  stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
-        if os.path.exists("STKFD/"+filepath):
-            with open(r"STKFD/"+filepath, 'r+') as f:
-                stockFeedObj = json.load(f, strict=False)
-    except Exception as e:
-        logging.error(f"An Error Occured: {e}")
+# @app.route('/stockfeed/<string:stquoteId>', methods = ['POST'])
+# def getStockFeedbyId(stquoteId):
+#     stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
+#     try:
+#         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
+#         filepath =  stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary/"+filename;
+#         if os.path.exists("STKFD/"+filepath):
+#             with open(r"STKFD/"+filepath, 'r+') as f:
+#                 stockFeedObj = json.load(f, strict=False)
+#     except Exception as e:
+#         logging.error(f"An Error Occured: {e}")
 
-    return stockFeedObj
+#     return stockFeedObj
 
 @app.route('/stkfeed', methods=['POST'])
 def getStkFeedbyId():
@@ -657,13 +717,13 @@ def getStkFeedbyId():
     stockFeedObj = [{'uid': 'SR Admin', 'cmt': 'This Symbol is InActive for sometime in this Forum. Post your comments to make it Active', 'lang': 'English', 'dt': datetime.now()},{'uid': 'SR Admin', 'cmt': 'Welcome to Stock Roundup Social App. Join with Stock Roundup App to engage in discussions about global Indices, Stocks and receive updates from other traders/investors. Stay informed and connected with fellow investors/traders in the Stock market Community with the Language/Script you are familiar.', 'lang': 'English', 'dt': datetime.now()}];
     try:
         filename =  stquoteId[0].upper()+stquoteId[:2].upper()+"_"+str(ord(stquoteId[0].upper()))+stquoteId+".txt";
-        filepath =  stquoteId[0].upper()+"_Stocks/"+stquoteId[:2].upper()+"_Stocks/"+filename;
+        filepath =  stquoteId[0].upper()+"_SRNBDiary/"+stquoteId[:2].upper()+"_SRNBDiary/"+filename;
         if os.path.exists("STKFD/"+filepath):
             with open(r"STKFD/"+filepath, 'r+') as f:
                 stockFeedObj = json.load(f, strict=False)
     except Exception as e:
+        print(e);
         logging.error(f"An Error Occured: {e}")
-
     return stockFeedObj
 
 
